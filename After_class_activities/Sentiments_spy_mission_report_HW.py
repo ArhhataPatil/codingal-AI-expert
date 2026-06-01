@@ -44,15 +44,15 @@ while True:
     polarity= TextBlob(user_input).sentiment.polarity
 
     if polarity>0.25:
-        sentiment="Positive"
+        sentiment="😊 Positive 😊"
         color=Fore.GREEN
 
     elif polarity<-0.25:
-        sentiment="Negative"
+        sentiment="😔 Negative 😔"
         color=Fore.RED
 
     else:
-        sentiment="Neutral"
+        sentiment="😐 Neutral 😐"
         color=Fore.YELLOW
 
     conversation_history.append((user_input, polarity, sentiment))
