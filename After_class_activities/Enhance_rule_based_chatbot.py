@@ -87,8 +87,9 @@ def chat():
             print(Fore.CYAN + random.choice(news))
 
         elif "time" in user_input:
-            now = datetime.now().strftime("%H:%M:%S")
-            print(f"{Fore.GREEN}Current time: " + now)
+            now = datetime.now()
+            print(f"{Fore.GREEN}Current time: ")
+            print(now)
 
         elif "exit" in user_input or "quit" in user_input:
             print(f"{Fore.GREEN}Goodbye {name}! See you next time!")
