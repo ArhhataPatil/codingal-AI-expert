@@ -2,9 +2,12 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 import matplotlib.pyplot as plt
 
+# Load MNIST dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-x_train, x_test = x_train / 255.0, x_test / 255.0
+# Normalize data (make values between 0 and 1)
+x_train = x_train / 255.0 
+x_test = x_test / 255.0
 
 # Build the model
 model = models.Sequential([
@@ -14,21 +17,24 @@ model = models.Sequential([
 ])
 
 # Compile the model
-model.compile(optimizer='adam',
+model.compile(
+    optimizer='adam',
     loss='sparse_categorical_crossentropy',
-    metrics=['accuracy'])
+    metrics=['accuracy']
+)
 
 # Train the model
-model.fit(x_train, y_train, epochs=5)
+model.fit(x_train, y_train, epochs=10)
 
 # Evaluate the model
 test_loss, test_acc = model.evaluate(x_test, y_test)
-print(f"Test Accuracy: {test_acc}")
+print("Test Accuracy:", test_acc)
 
 # Make predictions
 predictions = model.predict(x_test)
 
-# Display the first image and prediction
-plt.imshow(x_test[0], cmap=plt.cm.binary)
-plt.title(f"Predtcted: {predictions[0]. argmax()}")
+# Show first test image + prediction
+plt.imshow(x_test[0], cmap='gray')
+plt.title("Predicted: " + str(predictions[0].argmax()))
+plt.axis('off')
 plt.show()
