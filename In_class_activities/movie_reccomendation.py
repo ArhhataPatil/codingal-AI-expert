@@ -5,7 +5,7 @@ from colorama import Fore, init
 init(autoreset=True)
 
 try:
-    df= pd.read_csv("imdb_top_1000.csv")
+    df= pd.read_csv("imdb_top_1000.csv")  
 except FileNotFoundError:
     print(Fore.RED +"Error: The file 'imdb_top_1000.csv' was not found. Please ensure the file is in the correct directory.")
     raise SystemExit
@@ -41,3 +41,52 @@ def show(recs, name):
     for i, (t,p) in enumerate(recs, 1):
         print(Fore.GREEN + f"{i}. {t} - Sentiment: {senti(p)} (Polarity: {p:.2f})")
 
+def get_genre():
+    print(Fore.GREEN + "\nAvailable genres:", end=" ")
+    for i, g in enumerate(genres, 1): print(f"{Fore.CYAN}{i}. {g}")
+    print()
+    while True:
+        x = input(Fore.YELLOW + "Enter the genre number or name: ").strip()
+        if x.isdigit() and 1 <= int(x) <= len(genres): return genres[int(x)-1]
+        x = x.title()
+        if x in genres: return x
+        print(Fore.RED + "Invalid Input. Please try again.\n")
+
+def get_rating():
+    while True:
+        x=input(Fore.YELLOW +"Enter minimum IMDB rating (7.6-8.3) or 'skip':").strip()
+        if x.lower() == 'skip': return None
+        try:
+            r=float(x)
+            if 7.6 <= r<= 9.3: return r
+            print(Fore.RED +"Rating out of range. Try again!\n")
+
+        except ValueError:
+            print(Fore.RED +"Invalid input. Tray again!!\n")
+print(Fore.BLUE+"\nWelcome to the Movie Recommendation System!")
+name=input(Fore.YELLOW+"What is your name?").strip()
+print(f"\nNice to meet you, {name}!")
+print(Fore.BLUE+"Lets find some movies for you based on your preferences.\n")
+
+genre = get_genre()
+mood= input(Fore.MAGENTA + "How are you feeling today? (Describe your moodl): ").strip()
+print(Fore.BLUE+"\nAnalyzing mood", end="", flush=True); dots()
+mp= TextBlob(mood).sentiment.polarity
+md= "positive" if mp > 0 else "negetive" if mp < 0 else "neutral"
+print(f"{Fore.GREEN}Your mood is {md} (Polarity: {mp:.2f}).\n")
+
+rating= get_rating()
+print(f"{Fore.BLUE}\nFinding movies for {name}", end="", flush=True); dots()
+recs= recommend(genre=genre, mood=mood, rating=rating, n=3)
+print(Fore.RED + recs +"\n")if isinstance(recs, str) else show(recs, name)
+
+while True:
+    a = input(Fore.MAGENTA+"\nWould you like more recommendations? (yes/ no)").strip().lower()
+    if a == "no":
+        print(Fore.BLUE+f"\n Enjoy your movie picks, {name}! Goodbye!") 
+        break
+    if a == "yes":
+        recs= recommend(genres=genres, mood=mood, rating=rating, n=3)
+        print(Fore.RED+recs+"\n") if isinstance(recs,str) else show(recs, name)
+    else:
+        print(Fore.RED+"!! Invalid Input !! Try again. \n") 
