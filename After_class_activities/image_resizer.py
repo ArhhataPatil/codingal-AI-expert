@@ -1,6 +1,6 @@
 import cv2
 
-image = cv2.imread("beach.py")
+image = cv2.imread("beach.jpeg")
 
 small = cv2.resize(image, (200, 200))
 medium = cv2.resize(image, (400, 400))
